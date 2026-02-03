@@ -67,7 +67,8 @@ export const ListingsRepository = {
 		return listing;
 	},
 
-	getActiveListings: async (search?: string) => {
+	getActiveListings: async (params?: { search?: string; page?: number; limit?: number }) => {
+		const { search, page = 1, limit = 9 } = params ?? {};
 		const now = new Date();
 		const baseConditions = and(
 			eq(listings.status, "ACTIVE"),
@@ -86,20 +87,45 @@ export const ListingsRepository = {
 			? and(baseConditions, searchCondition)
 			: baseConditions;
 
-		return db
-			.select({
-				id: listings.id,
-				title: listings.title,
-				description: listings.description,
-				quantity: listings.quantity,
-				reservedQuantity: listings.reservedQuantity,
-				unit: listings.unit,
-				expiryDate: listings.expiryDate,
-				sellerName: users.name,
-			})
-			.from(listings)
-			.innerJoin(users, eq(listings.userId, users.id))
-			.where(whereCondition);
+		const offset = (page - 1) * limit;
+
+		const [items, countResult] = await Promise.all([
+			db
+				.select({
+					id: listings.id,
+					title: listings.title,
+					description: listings.description,
+					quantity: listings.quantity,
+					reservedQuantity: listings.reservedQuantity,
+					unit: listings.unit,
+					expiryDate: listings.expiryDate,
+					sellerName: users.name,
+				})
+				.from(listings)
+				.innerJoin(users, eq(listings.userId, users.id))
+				.where(whereCondition)
+				.orderBy(desc(listings.createdAt))
+				.limit(limit)
+				.offset(offset),
+			db
+				.select({ count: count() })
+				.from(listings)
+				.innerJoin(users, eq(listings.userId, users.id))
+				.where(whereCondition),
+		]);
+
+		const total = countResult[0]?.count ?? 0;
+		const totalPages = Math.ceil(total / limit);
+
+		return {
+			items,
+			pagination: {
+				page,
+				limit,
+				total,
+				totalPages,
+			},
+		};
 	},
 
 	getByUserId: async (userId: string) => {
