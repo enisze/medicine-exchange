@@ -56,9 +56,9 @@ export function LoginForm() {
 	}
 
 	return (
-		<Card className="w-full max-w-md">
+		<Card className="w-full max-w-md bg-card border-border">
 			<CardHeader>
-				<CardTitle>Anmelden</CardTitle>
+				<CardTitle className="text-card-foreground">Anmelden</CardTitle>
 				<CardDescription>Melden Sie sich mit Ihrem Konto an</CardDescription>
 			</CardHeader>
 			<CardContent>
