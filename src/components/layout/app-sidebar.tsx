@@ -14,7 +14,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Package2, LayoutDashboard, Package, ShoppingCart } from "lucide-react";
+import { Building2, LayoutDashboard, Package, ShoppingCart } from "lucide-react";
 import { UserNav } from "./user-nav";
 
 interface AppSidebarProps {
@@ -53,14 +53,16 @@ export function AppSidebar({ user }: AppSidebarProps) {
 	];
 
 	return (
-		<Sidebar>
-			<SidebarHeader>
+		<Sidebar className="border-sidebar-border">
+			<SidebarHeader className="border-b border-sidebar-border">
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<SidebarMenuButton size="lg" asChild>
-							<Link href="/dashboard">
-								<Package2 className="size-6" />
-								<span className="font-semibold">MedExchange</span>
+							<Link href="/dashboard" className="flex items-center gap-2">
+								<div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+									<Building2 className="w-5 h-5 text-primary-foreground" />
+								</div>
+								<span className="font-semibold text-sidebar-foreground">MedExchange</span>
 							</Link>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
@@ -76,10 +78,11 @@ export function AppSidebar({ user }: AppSidebarProps) {
 									<SidebarMenuItem key={item.href}>
 										<SidebarMenuButton
 											asChild
-											isActive={pathname === item.href}
+											isActive={pathname === item.href || pathname.startsWith(item.href + "/")}
+											className="data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-foreground"
 										>
 											<Link href={item.href}>
-												<item.icon className="size-4" />
+												<item.icon className="size-5" />
 												<span>{item.title}</span>
 											</Link>
 										</SidebarMenuButton>
@@ -89,7 +92,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
 					</SidebarGroupContent>
 				</SidebarGroup>
 			</SidebarContent>
-			<SidebarFooter>
+			<SidebarFooter className="border-t border-sidebar-border">
 				<UserNav user={user} />
 			</SidebarFooter>
 		</Sidebar>

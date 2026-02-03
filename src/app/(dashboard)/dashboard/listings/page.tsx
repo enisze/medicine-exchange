@@ -34,7 +34,7 @@ export default async function MyListingsPage() {
 		<div className="space-y-6">
 			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 				<div>
-					<h1 className="text-2xl font-semibold">Meine Angebote</h1>
+					<h1 className="text-2xl font-semibold text-foreground">Meine Angebote</h1>
 					<p className="text-muted-foreground mt-1">
 						Verwalten Sie Ihre Medikamentenangebote
 					</p>
@@ -48,10 +48,11 @@ export default async function MyListingsPage() {
 			</div>
 
 			{myListings.length === 0 ? (
-				<Card>
+				<Card className="bg-card border-border">
 					<CardContent className="flex flex-col items-center justify-center py-12">
 						<Box className="h-12 w-12 text-muted-foreground mb-4" />
-						<p className="text-muted-foreground mb-4">
+						<h3 className="text-lg font-medium text-foreground">Keine Angebote vorhanden</h3>
+						<p className="text-muted-foreground mt-1 mb-4">
 							Sie haben noch keine Angebote erstellt
 						</p>
 						<Link href="/dashboard/listings/new">
@@ -61,58 +62,60 @@ export default async function MyListingsPage() {
 				</Card>
 			) : (
 				<Card className="bg-card border-border">
-					<Table>
-						<TableHeader>
-							<TableRow className="border-border hover:bg-transparent">
-								<TableHead className="text-muted-foreground">Titel</TableHead>
-								<TableHead className="text-muted-foreground">Menge</TableHead>
-								<TableHead className="text-muted-foreground">Ablaufdatum</TableHead>
-								<TableHead className="text-muted-foreground">Status</TableHead>
-								<TableHead className="text-muted-foreground text-right">Aktionen</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{myListings.map((listing) => {
-								const isExpired = isPast(listing.expiryDate);
-								return (
-									<TableRow key={listing.id} className="border-border">
-										<TableCell>
-											<div className="flex items-center gap-3">
-												<div className="p-2 rounded-lg bg-primary/10">
-													<Package className="h-4 w-4 text-primary" />
+					<CardContent className="p-0">
+						<Table>
+							<TableHeader>
+								<TableRow className="border-border hover:bg-transparent">
+									<TableHead className="text-muted-foreground">Titel</TableHead>
+									<TableHead className="text-muted-foreground">Menge</TableHead>
+									<TableHead className="text-muted-foreground">Ablaufdatum</TableHead>
+									<TableHead className="text-muted-foreground">Status</TableHead>
+									<TableHead className="text-muted-foreground text-right">Aktionen</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{myListings.map((listing) => {
+									const isExpired = isPast(listing.expiryDate);
+									return (
+										<TableRow key={listing.id} className="border-border">
+											<TableCell>
+												<div className="flex items-center gap-3">
+													<div className="p-2 rounded-lg bg-primary/10">
+														<Package className="h-4 w-4 text-primary" />
+													</div>
+													<span className="font-medium text-card-foreground">{listing.title}</span>
 												</div>
-												<span className="font-medium">{listing.title}</span>
-											</div>
-										</TableCell>
-										<TableCell>
-											{listing.quantity} {listing.unit}
-										</TableCell>
-										<TableCell>
-											<div className="flex items-center gap-1.5">
-												{isExpired ? (
-													<Badge variant="secondary" className="bg-destructive/20 text-destructive text-xs">
-														<AlertTriangle className="h-3 w-3 mr-1" />
-														Abgelaufen
-													</Badge>
-												) : (
-													<span className="flex items-center gap-1 text-sm text-muted-foreground">
-														<Calendar className="h-3 w-3" />
-														{format(listing.expiryDate, "dd.MM.yyyy", { locale: de })}
-													</span>
-												)}
-											</div>
-										</TableCell>
-										<TableCell>
-											<StatusBadge status={listing.status} isExpired={isExpired} />
-										</TableCell>
-										<TableCell className="text-right">
-											<ListingActions listing={listing} />
-										</TableCell>
-									</TableRow>
-								);
-							})}
-						</TableBody>
-					</Table>
+											</TableCell>
+											<TableCell className="text-card-foreground">
+												{listing.quantity} {listing.unit}
+											</TableCell>
+											<TableCell>
+												<div className="flex items-center gap-1.5">
+													{isExpired ? (
+														<Badge variant="secondary" className="bg-destructive/20 text-destructive text-xs">
+															<AlertTriangle className="h-3 w-3 mr-1" />
+															Abgelaufen
+														</Badge>
+													) : (
+														<span className="flex items-center gap-1 text-sm text-muted-foreground">
+															<Calendar className="h-3 w-3" />
+															{format(listing.expiryDate, "dd.MM.yyyy", { locale: de })}
+														</span>
+													)}
+												</div>
+											</TableCell>
+											<TableCell>
+												<StatusBadge status={listing.status} isExpired={isExpired} />
+											</TableCell>
+											<TableCell className="text-right">
+												<ListingActions listing={listing} />
+											</TableCell>
+										</TableRow>
+									);
+								})}
+							</TableBody>
+						</Table>
+					</CardContent>
 				</Card>
 			)}
 		</div>

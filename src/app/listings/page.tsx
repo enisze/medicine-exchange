@@ -28,8 +28,8 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
 			<div className="space-y-6">
 				<div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 					<div>
-						<h1 className="text-3xl font-bold">Verfügbare Medikamente</h1>
-						<p className="text-muted-foreground">
+						<h1 className="text-2xl font-semibold text-foreground">Verfügbare Medikamente</h1>
+						<p className="text-muted-foreground mt-1">
 							Durchsuchen Sie aktuelle Angebote von Krankenhäusern
 						</p>
 					</div>
@@ -39,13 +39,14 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
 				</div>
 
 				{activeListings.length === 0 ? (
-					<Card>
+					<Card className="bg-card border-border">
 						<CardContent className="flex flex-col items-center justify-center py-12">
 							<Box className="h-12 w-12 text-muted-foreground mb-4" />
-							<p className="text-muted-foreground">
+							<h3 className="text-lg font-medium text-foreground">Keine Angebote gefunden</h3>
+							<p className="text-muted-foreground mt-1">
 								{search
-									? `Keine Angebote für "${search}" gefunden`
-									: "Keine Angebote verfügbar"}
+									? `Keine Ergebnisse für "${search}"`
+									: "Aktuell sind keine Angebote verfügbar"}
 							</p>
 						</CardContent>
 					</Card>

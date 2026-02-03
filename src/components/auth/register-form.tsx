@@ -68,9 +68,9 @@ export function RegisterForm() {
 	}
 
 	return (
-		<Card className="w-full max-w-md">
+		<Card className="w-full max-w-md bg-card border-border">
 			<CardHeader>
-				<CardTitle>Registrieren</CardTitle>
+				<CardTitle className="text-card-foreground">Registrieren</CardTitle>
 				<CardDescription>Erstellen Sie ein neues Konto</CardDescription>
 			</CardHeader>
 			<CardContent>

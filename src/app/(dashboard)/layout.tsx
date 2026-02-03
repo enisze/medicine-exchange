@@ -20,10 +20,10 @@ export default async function DashboardLayout({
 	return (
 		<SidebarProvider>
 			<AppSidebar user={session.user} />
-			<SidebarInset>
-				<header className="flex h-14 items-center gap-4 border-b px-4 md:hidden">
-					<SidebarTrigger />
-					<span className="font-semibold">MedExchange</span>
+			<SidebarInset className="bg-background">
+				<header className="flex h-14 items-center gap-4 border-b border-border px-4 md:hidden bg-card">
+					<SidebarTrigger className="text-foreground" />
+					<span className="font-semibold text-foreground">MedExchange</span>
 				</header>
 				<main className="flex-1 p-4 md:p-6">{children}</main>
 			</SidebarInset>

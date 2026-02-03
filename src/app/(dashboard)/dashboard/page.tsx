@@ -36,7 +36,7 @@ export default async function DashboardPage() {
 	return (
 		<div className="space-y-6">
 			<div>
-				<h1 className="text-2xl font-semibold">Willkommen, {user.name}</h1>
+				<h1 className="text-2xl font-semibold text-foreground">Willkommen, {user.name}</h1>
 				<p className="text-muted-foreground mt-1">
 					{isSeller
 						? "Verwalten Sie Ihre Medikamentenangebote"
@@ -47,7 +47,7 @@ export default async function DashboardPage() {
 			{isSeller && sellerStats && sellerRequestStats && (
 				<>
 					<div>
-						<h2 className="text-lg font-semibold mb-3">Bestandsübersicht</h2>
+						<h2 className="text-lg font-semibold text-foreground mb-3">Bestandsübersicht</h2>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 							<Card className="bg-card border-border">
 								<CardContent className="p-5">
@@ -56,7 +56,7 @@ export default async function DashboardPage() {
 											<p className="text-sm text-muted-foreground">
 												Aktive Angebote
 											</p>
-											<p className="text-2xl font-semibold">
+											<p className="text-2xl font-semibold text-card-foreground">
 												{sellerStats.activeListings}
 											</p>
 											<p className="text-xs text-muted-foreground">
@@ -77,7 +77,7 @@ export default async function DashboardPage() {
 											<p className="text-sm text-muted-foreground">
 												Gesamtbestand
 											</p>
-											<p className="text-2xl font-semibold">
+											<p className="text-2xl font-semibold text-card-foreground">
 												{sellerStats.totalInventory}
 											</p>
 											<p className="text-xs text-muted-foreground">
@@ -136,7 +136,7 @@ export default async function DashboardPage() {
 					</div>
 
 					<div>
-						<h2 className="text-lg font-semibold mb-3">Anfragen</h2>
+						<h2 className="text-lg font-semibold text-foreground mb-3">Anfragen</h2>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 							<Card className="bg-card border-border">
 								<CardContent className="p-5">
@@ -145,7 +145,7 @@ export default async function DashboardPage() {
 											<p className="text-sm text-muted-foreground">
 												Offene Anfragen
 											</p>
-											<p className="text-2xl font-semibold">
+											<p className="text-2xl font-semibold text-card-foreground">
 												{sellerRequestStats.pendingRequests}
 											</p>
 											<p className="text-xs text-muted-foreground">
@@ -194,7 +194,7 @@ export default async function DashboardPage() {
 											<p className="text-sm text-muted-foreground">
 												Abgelehnt
 											</p>
-											<p className="text-2xl font-semibold">
+											<p className="text-2xl font-semibold text-card-foreground">
 												{sellerRequestStats.rejectedRequests}
 											</p>
 											<p className="text-xs text-muted-foreground">
@@ -234,7 +234,7 @@ export default async function DashboardPage() {
 			{!isSeller && buyerStats && (
 				<>
 					<div>
-						<h2 className="text-lg font-semibold mb-3">Meine Anfragen</h2>
+						<h2 className="text-lg font-semibold text-foreground mb-3">Meine Anfragen</h2>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 							<Card className="bg-card border-border">
 								<CardContent className="p-5">
@@ -292,7 +292,7 @@ export default async function DashboardPage() {
 											<p className="text-sm text-muted-foreground">
 												Abgelehnt
 											</p>
-											<p className="text-2xl font-semibold">
+											<p className="text-2xl font-semibold text-card-foreground">
 												{buyerStats.rejectedRequests}
 											</p>
 											<p className="text-xs text-muted-foreground">
@@ -313,7 +313,7 @@ export default async function DashboardPage() {
 											<p className="text-sm text-muted-foreground">
 												Gesamt
 											</p>
-											<p className="text-2xl font-semibold">
+											<p className="text-2xl font-semibold text-card-foreground">
 												{buyerStats.totalRequests}
 											</p>
 											<p className="text-xs text-muted-foreground">
@@ -330,7 +330,7 @@ export default async function DashboardPage() {
 					</div>
 
 					<div>
-						<h2 className="text-lg font-semibold mb-3">Schnellaktionen</h2>
+						<h2 className="text-lg font-semibold text-foreground mb-3">Schnellaktionen</h2>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 							<Card className="bg-card border-border">
 								<CardContent className="p-5">
