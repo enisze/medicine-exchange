@@ -45,7 +45,6 @@ export default async function DashboardPage() {
 
 			{isSeller && sellerStats && sellerRequestStats && (
 				<>
-					{/* Inventory Overview */}
 					<div>
 						<h2 className="text-lg font-semibold mb-3">Bestandsübersicht</h2>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -119,7 +118,6 @@ export default async function DashboardPage() {
 						</div>
 					</div>
 
-					{/* Request Statistics */}
 					<div>
 						<h2 className="text-lg font-semibold mb-3">Anfragen</h2>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -207,7 +205,6 @@ export default async function DashboardPage() {
 
 			{!isSeller && buyerStats && (
 				<>
-					{/* Buyer Request Statistics */}
 					<div>
 						<h2 className="text-lg font-semibold mb-3">Meine Anfragen</h2>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -286,7 +283,6 @@ export default async function DashboardPage() {
 						</div>
 					</div>
 
-					{/* Quick Actions for Buyer */}
 					<div>
 						<h2 className="text-lg font-semibold mb-3">Schnellaktionen</h2>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
