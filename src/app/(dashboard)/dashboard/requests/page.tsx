@@ -119,11 +119,11 @@ export default async function RequestsPage() {
 }
 
 function StatusBadge({ status }: { status: string }) {
-	const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-		PENDING: "outline",
-		APPROVED: "default",
-		REJECTED: "destructive",
-		CANCELLED: "secondary",
+	const styles: Record<string, string> = {
+		PENDING: "bg-warning/20 text-warning",
+		APPROVED: "bg-success/20 text-success",
+		REJECTED: "bg-destructive/20 text-destructive",
+		CANCELLED: "bg-muted text-muted-foreground",
 	};
 
 	const labels: Record<string, string> = {
@@ -133,5 +133,9 @@ function StatusBadge({ status }: { status: string }) {
 		CANCELLED: "Storniert",
 	};
 
-	return <Badge variant={variants[status] || "secondary"}>{labels[status] || status}</Badge>;
+	return (
+		<Badge variant="secondary" className={styles[status] || ""}>
+			{labels[status] || status}
+		</Badge>
+	);
 }

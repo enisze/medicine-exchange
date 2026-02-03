@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { ListingsRepository, RequestsRepository } from "@/db/repositories";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
 	Package,
@@ -12,6 +12,7 @@ import {
 	Box,
 	CheckCircle,
 	Archive,
+	ArrowRight,
 } from "lucide-react";
 
 export default async function DashboardPage() {
@@ -35,8 +36,8 @@ export default async function DashboardPage() {
 	return (
 		<div className="space-y-6">
 			<div>
-				<h1 className="text-2xl font-bold">Willkommen, {user.name}</h1>
-				<p className="text-muted-foreground">
+				<h1 className="text-2xl font-semibold">Willkommen, {user.name}</h1>
+				<p className="text-muted-foreground mt-1">
 					{isSeller
 						? "Verwalten Sie Ihre Medikamentenangebote"
 						: "Finden Sie Medikamente von anderen Krankenhäusern"}
@@ -48,71 +49,87 @@ export default async function DashboardPage() {
 					<div>
 						<h2 className="text-lg font-semibold mb-3">Bestandsübersicht</h2>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">
-										Aktive Angebote
-									</CardTitle>
-									<Package className="h-4 w-4 text-muted-foreground" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">
-										{sellerStats.activeListings}
+							<Card className="bg-card border-border">
+								<CardContent className="p-5">
+									<div className="flex items-start justify-between">
+										<div className="space-y-2">
+											<p className="text-sm text-muted-foreground">
+												Aktive Angebote
+											</p>
+											<p className="text-2xl font-semibold">
+												{sellerStats.activeListings}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												von {sellerStats.totalListings} gesamt
+											</p>
+										</div>
+										<div className="p-2.5 rounded-lg bg-primary/10">
+											<Package className="h-5 w-5 text-primary" />
+										</div>
 									</div>
-									<p className="text-xs text-muted-foreground">
-										von {sellerStats.totalListings} gesamt
-									</p>
 								</CardContent>
 							</Card>
 
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">
-										Gesamtbestand
-									</CardTitle>
-									<Box className="h-4 w-4 text-muted-foreground" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">
-										{sellerStats.totalInventory}
+							<Card className="bg-card border-border">
+								<CardContent className="p-5">
+									<div className="flex items-start justify-between">
+										<div className="space-y-2">
+											<p className="text-sm text-muted-foreground">
+												Gesamtbestand
+											</p>
+											<p className="text-2xl font-semibold">
+												{sellerStats.totalInventory}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												Einheiten in aktiven Angeboten
+											</p>
+										</div>
+										<div className="p-2.5 rounded-lg bg-secondary">
+											<Box className="h-5 w-5 text-muted-foreground" />
+										</div>
 									</div>
-									<p className="text-xs text-muted-foreground">
-										Einheiten in aktiven Angeboten
-									</p>
 								</CardContent>
 							</Card>
 
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">
-										Reserviert
-									</CardTitle>
-									<Clock className="h-4 w-4 text-yellow-500" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold text-yellow-600">
-										{sellerStats.reservedInventory}
+							<Card className="bg-card border-border">
+								<CardContent className="p-5">
+									<div className="flex items-start justify-between">
+										<div className="space-y-2">
+											<p className="text-sm text-muted-foreground">
+												Reserviert
+											</p>
+											<p className="text-2xl font-semibold text-warning">
+												{sellerStats.reservedInventory}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												Einheiten in Anfragen
+											</p>
+										</div>
+										<div className="p-2.5 rounded-lg bg-warning/10">
+											<Clock className="h-5 w-5 text-warning" />
+										</div>
 									</div>
-									<p className="text-xs text-muted-foreground">
-										Einheiten in Anfragen
-									</p>
 								</CardContent>
 							</Card>
 
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">
-										Verfügbar
-									</CardTitle>
-									<CheckCircle className="h-4 w-4 text-green-500" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold text-green-600">
-										{sellerStats.availableInventory}
+							<Card className="bg-card border-border">
+								<CardContent className="p-5">
+									<div className="flex items-start justify-between">
+										<div className="space-y-2">
+											<p className="text-sm text-muted-foreground">
+												Verfügbar
+											</p>
+											<p className="text-2xl font-semibold text-success">
+												{sellerStats.availableInventory}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												Einheiten frei zur Anfrage
+											</p>
+										</div>
+										<div className="p-2.5 rounded-lg bg-success/10">
+											<CheckCircle className="h-5 w-5 text-success" />
+										</div>
 									</div>
-									<p className="text-xs text-muted-foreground">
-										Einheiten frei zur Anfrage
-									</p>
 								</CardContent>
 							</Card>
 						</div>
@@ -121,70 +138,81 @@ export default async function DashboardPage() {
 					<div>
 						<h2 className="text-lg font-semibold mb-3">Anfragen</h2>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">
-										Offene Anfragen
-									</CardTitle>
-									<ShoppingCart className="h-4 w-4 text-yellow-500" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">
-										{sellerRequestStats.pendingRequests}
+							<Card className="bg-card border-border">
+								<CardContent className="p-5">
+									<div className="flex items-start justify-between">
+										<div className="space-y-2">
+											<p className="text-sm text-muted-foreground">
+												Offene Anfragen
+											</p>
+											<p className="text-2xl font-semibold">
+												{sellerRequestStats.pendingRequests}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												{sellerRequestStats.pendingQuantity} Einheiten angefragt
+											</p>
+											<Link
+												href="/dashboard/requests"
+												className="text-sm text-primary hover:underline flex items-center gap-1"
+											>
+												Anfragen verwalten
+												<ArrowRight className="h-3 w-3" />
+											</Link>
+										</div>
+										<div className="p-2.5 rounded-lg bg-warning/10">
+											<ShoppingCart className="h-5 w-5 text-warning" />
+										</div>
 									</div>
-									<p className="text-xs text-muted-foreground">
-										{sellerRequestStats.pendingQuantity} Einheiten angefragt
-									</p>
-									<Link href="/dashboard/requests">
-										<Button variant="link" className="px-0 text-sm">
-											Anfragen verwalten
-										</Button>
-									</Link>
 								</CardContent>
 							</Card>
 
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">
-										Genehmigt
-									</CardTitle>
-									<CheckCircle className="h-4 w-4 text-green-500" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold text-green-600">
-										{sellerRequestStats.approvedRequests}
+							<Card className="bg-card border-border">
+								<CardContent className="p-5">
+									<div className="flex items-start justify-between">
+										<div className="space-y-2">
+											<p className="text-sm text-muted-foreground">
+												Genehmigt
+											</p>
+											<p className="text-2xl font-semibold text-success">
+												{sellerRequestStats.approvedRequests}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												{sellerRequestStats.approvedQuantity} Einheiten verkauft
+											</p>
+										</div>
+										<div className="p-2.5 rounded-lg bg-success/10">
+											<CheckCircle className="h-5 w-5 text-success" />
+										</div>
 									</div>
-									<p className="text-xs text-muted-foreground">
-										{sellerRequestStats.approvedQuantity} Einheiten verkauft
-									</p>
 								</CardContent>
 							</Card>
 
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">
-										Abgelehnt
-									</CardTitle>
-									<Archive className="h-4 w-4 text-muted-foreground" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">
-										{sellerRequestStats.rejectedRequests}
+							<Card className="bg-card border-border">
+								<CardContent className="p-5">
+									<div className="flex items-start justify-between">
+										<div className="space-y-2">
+											<p className="text-sm text-muted-foreground">
+												Abgelehnt
+											</p>
+											<p className="text-2xl font-semibold">
+												{sellerRequestStats.rejectedRequests}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												Anfragen abgelehnt
+											</p>
+										</div>
+										<div className="p-2.5 rounded-lg bg-secondary">
+											<Archive className="h-5 w-5 text-muted-foreground" />
+										</div>
 									</div>
-									<p className="text-xs text-muted-foreground">
-										Anfragen abgelehnt
-									</p>
 								</CardContent>
 							</Card>
 
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">
+							<Card className="bg-card border-border">
+								<CardContent className="p-5 space-y-3">
+									<p className="text-sm text-muted-foreground">
 										Schnellaktionen
-									</CardTitle>
-									<Plus className="h-4 w-4 text-muted-foreground" />
-								</CardHeader>
-								<CardContent className="space-y-2">
+									</p>
 									<Link href="/dashboard/listings/new">
 										<Button size="sm" className="w-full">
 											<Plus className="h-4 w-4 mr-2" />
@@ -208,76 +236,94 @@ export default async function DashboardPage() {
 					<div>
 						<h2 className="text-lg font-semibold mb-3">Meine Anfragen</h2>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">
-										Ausstehend
-									</CardTitle>
-									<Clock className="h-4 w-4 text-yellow-500" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold text-yellow-600">
-										{buyerStats.pendingRequests}
+							<Card className="bg-card border-border">
+								<CardContent className="p-5">
+									<div className="flex items-start justify-between">
+										<div className="space-y-2">
+											<p className="text-sm text-muted-foreground">
+												Ausstehend
+											</p>
+											<p className="text-2xl font-semibold text-warning">
+												{buyerStats.pendingRequests}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												{buyerStats.pendingQuantity} Einheiten reserviert
+											</p>
+											<Link
+												href="/dashboard/requests"
+												className="text-sm text-primary hover:underline flex items-center gap-1"
+											>
+												Status anzeigen
+												<ArrowRight className="h-3 w-3" />
+											</Link>
+										</div>
+										<div className="p-2.5 rounded-lg bg-warning/10">
+											<Clock className="h-5 w-5 text-warning" />
+										</div>
 									</div>
-									<p className="text-xs text-muted-foreground">
-										{buyerStats.pendingQuantity} Einheiten reserviert
-									</p>
-									<Link href="/dashboard/requests">
-										<Button variant="link" className="px-0 text-sm">
-											Status anzeigen
-										</Button>
-									</Link>
 								</CardContent>
 							</Card>
 
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">
-										Genehmigt
-									</CardTitle>
-									<CheckCircle className="h-4 w-4 text-green-500" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold text-green-600">
-										{buyerStats.approvedRequests}
+							<Card className="bg-card border-border">
+								<CardContent className="p-5">
+									<div className="flex items-start justify-between">
+										<div className="space-y-2">
+											<p className="text-sm text-muted-foreground">
+												Genehmigt
+											</p>
+											<p className="text-2xl font-semibold text-success">
+												{buyerStats.approvedRequests}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												{buyerStats.approvedQuantity} Einheiten erhalten
+											</p>
+										</div>
+										<div className="p-2.5 rounded-lg bg-success/10">
+											<CheckCircle className="h-5 w-5 text-success" />
+										</div>
 									</div>
-									<p className="text-xs text-muted-foreground">
-										{buyerStats.approvedQuantity} Einheiten erhalten
-									</p>
 								</CardContent>
 							</Card>
 
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">
-										Abgelehnt
-									</CardTitle>
-									<Archive className="h-4 w-4 text-muted-foreground" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">
-										{buyerStats.rejectedRequests}
+							<Card className="bg-card border-border">
+								<CardContent className="p-5">
+									<div className="flex items-start justify-between">
+										<div className="space-y-2">
+											<p className="text-sm text-muted-foreground">
+												Abgelehnt
+											</p>
+											<p className="text-2xl font-semibold">
+												{buyerStats.rejectedRequests}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												Anfragen nicht erfüllt
+											</p>
+										</div>
+										<div className="p-2.5 rounded-lg bg-secondary">
+											<Archive className="h-5 w-5 text-muted-foreground" />
+										</div>
 									</div>
-									<p className="text-xs text-muted-foreground">
-										Anfragen nicht erfüllt
-									</p>
 								</CardContent>
 							</Card>
 
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between pb-2">
-									<CardTitle className="text-sm font-medium">
-										Gesamt
-									</CardTitle>
-									<ShoppingCart className="h-4 w-4 text-muted-foreground" />
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">
-										{buyerStats.totalRequests}
+							<Card className="bg-card border-border">
+								<CardContent className="p-5">
+									<div className="flex items-start justify-between">
+										<div className="space-y-2">
+											<p className="text-sm text-muted-foreground">
+												Gesamt
+											</p>
+											<p className="text-2xl font-semibold">
+												{buyerStats.totalRequests}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												Anfragen insgesamt
+											</p>
+										</div>
+										<div className="p-2.5 rounded-lg bg-secondary">
+											<ShoppingCart className="h-5 w-5 text-muted-foreground" />
+										</div>
 									</div>
-									<p className="text-xs text-muted-foreground">
-										Anfragen insgesamt
-									</p>
 								</CardContent>
 							</Card>
 						</div>
@@ -286,8 +332,8 @@ export default async function DashboardPage() {
 					<div>
 						<h2 className="text-lg font-semibold mb-3">Schnellaktionen</h2>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-							<Card>
-								<CardContent className="pt-6">
+							<Card className="bg-card border-border">
+								<CardContent className="p-5">
 									<Link href="/listings">
 										<Button className="w-full">
 											<Package className="h-4 w-4 mr-2" />
@@ -296,8 +342,8 @@ export default async function DashboardPage() {
 									</Link>
 								</CardContent>
 							</Card>
-							<Card>
-								<CardContent className="pt-6">
+							<Card className="bg-card border-border">
+								<CardContent className="p-5">
 									<Link href="/dashboard/requests">
 										<Button variant="outline" className="w-full">
 											<ShoppingCart className="h-4 w-4 mr-2" />

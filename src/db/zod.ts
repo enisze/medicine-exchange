@@ -1,16 +1,21 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import {
-	users,
-	listings,
-	requests,
-	userRoleEnum,
-	listingStatusEnum,
-	requestStatusEnum,
-} from "./schema";
+import { z } from "zod";
+import { users, listings, requests } from "./schema";
 
-export const userRoleSchema = createSelectSchema(userRoleEnum);
-export const listingStatusSchema = createSelectSchema(listingStatusEnum);
-export const requestStatusSchema = createSelectSchema(requestStatusEnum);
+export const userRoleSchema = z.enum(["SELLER", "BUYER"]);
+export const listingStatusSchema = z.enum([
+	"DRAFT",
+	"ACTIVE",
+	"SOLD",
+	"EXPIRED",
+	"CANCELLED",
+]);
+export const requestStatusSchema = z.enum([
+	"PENDING",
+	"APPROVED",
+	"REJECTED",
+	"CANCELLED",
+]);
 
 export const userSelectSchema = createSelectSchema(users);
 export const userInsertSchema = createInsertSchema(users);
