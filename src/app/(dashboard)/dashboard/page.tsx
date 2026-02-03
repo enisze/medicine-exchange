@@ -22,7 +22,6 @@ export default async function DashboardPage() {
 	const user = session!.user;
 	const isSeller = user.role === "SELLER";
 
-	// Fetch statistics based on role
 	const sellerStats = isSeller
 		? await ListingsRepository.getSellerStats(user.id)
 		: null;

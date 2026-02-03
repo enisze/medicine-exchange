@@ -148,7 +148,6 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 	}),
 }));
 
-// Inferred types from schema
 export type User = typeof users.$inferSelect;
 export type UserInsert = typeof users.$inferInsert;
 export type UserRole = User["role"];

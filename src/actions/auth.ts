@@ -7,12 +7,10 @@ import { actionClient, authActionClient } from "@/lib/safe-action";
 export const setInitialRole = authActionClient
 	.schema(setInitialRoleSchema)
 	.action(async ({ parsedInput, ctx }) => {
-		// Security: Only allow users to set their own role
 		if (ctx.user.email !== parsedInput.email) {
 			throw new Error("Cannot set role for another user");
 		}
 
-		// Only update if still on default BUYER role
 		if (ctx.user.role !== "BUYER") {
 			return { success: true };
 		}

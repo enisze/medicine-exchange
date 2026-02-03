@@ -71,10 +71,8 @@ export const cancelListing = authActionClient
 			throw new Error("Verkaufte Angebote können nicht storniert werden");
 		}
 
-		// Reject all pending requests for this listing
 		await RequestsRepository.rejectAllByListingId(parsedInput.id);
 
-		// Update listing status to cancelled
 		await ListingsRepository.updateStatus({
 			id: parsedInput.id,
 			status: "CANCELLED",

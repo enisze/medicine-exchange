@@ -14,7 +14,6 @@ export const createRequest = authActionClient
 			throw new Error("Angebot nicht gefunden");
 		}
 
-		// Prevent users from requesting their own listings
 		if (listing.userId === ctx.user.id) {
 			throw new Error("Sie können keine Anfrage für Ihr eigenes Angebot stellen");
 		}
@@ -23,19 +22,16 @@ export const createRequest = authActionClient
 			throw new Error("Angebot ist nicht verfügbar");
 		}
 
-		// Check expiry
 		if (listing.expiryDate <= new Date()) {
 			throw new Error("Angebot ist abgelaufen");
 		}
 
-		// Calculate available quantity (total - reserved)
 		const availableQuantity = listing.quantity - listing.reservedQuantity;
 
 		if (parsedInput.quantity > availableQuantity) {
 			throw new Error(`Nur ${availableQuantity} ${listing.unit} verfügbar`);
 		}
 
-		// Atomic reservation - WHERE clause prevents race conditions
 		const reserved = await ListingsRepository.reserveQuantity({
 			id: parsedInput.listingId,
 			quantity: parsedInput.quantity,
@@ -47,7 +43,6 @@ export const createRequest = authActionClient
 			);
 		}
 
-		// Create request (reservation already secured)
 		try {
 			const request = await RequestsRepository.create({
 				listingId: parsedInput.listingId,
@@ -60,7 +55,6 @@ export const createRequest = authActionClient
 			revalidatePath("/dashboard/requests");
 			return { request };
 		} catch (error) {
-			// Rollback reservation if request creation fails
 			await ListingsRepository.releaseReservation({
 				id: parsedInput.listingId,
 				quantity: parsedInput.quantity,
@@ -88,25 +82,21 @@ export const approveRequest = authActionClient
 			throw new Error("Anfrage kann nicht mehr bearbeitet werden");
 		}
 
-		// Check if listing expired
 		if (listing.expiryDate <= new Date()) {
 			throw new Error("Angebot ist abgelaufen");
 		}
 
-		// Verify there's enough stock (quantity, not just available)
 		if (request.quantity > listing.quantity) {
 			throw new Error(
 				`Nicht genügend Bestand. Nur ${listing.quantity} ${listing.unit} verfügbar.`
 			);
 		}
 
-		// Fulfill reservation (decrements both quantity and reservedQuantity, auto-SOLD if empty)
 		await ListingsRepository.fulfillReservation({
 			id: request.listingId,
 			quantity: request.quantity,
 		});
 
-		// Update request status
 		await RequestsRepository.updateStatus({
 			id: parsedInput.id,
 			status: "APPROVED",
@@ -137,13 +127,11 @@ export const rejectRequest = authActionClient
 			throw new Error("Anfrage kann nicht mehr bearbeitet werden");
 		}
 
-		// Release the reservation
 		await ListingsRepository.releaseReservation({
 			id: request.listingId,
 			quantity: request.quantity,
 		});
 
-		// Update request status
 		await RequestsRepository.updateStatus({
 			id: parsedInput.id,
 			status: "REJECTED",
@@ -164,7 +152,6 @@ export const cancelRequest = authActionClient
 			throw new Error("Anfrage nicht gefunden");
 		}
 
-		// Only the buyer who created the request can cancel it
 		if (request.buyerId !== ctx.user.id) {
 			throw new Error("Keine Berechtigung");
 		}
@@ -173,13 +160,11 @@ export const cancelRequest = authActionClient
 			throw new Error("Nur ausstehende Anfragen können storniert werden");
 		}
 
-		// Release the reservation
 		await ListingsRepository.releaseReservation({
 			id: request.listingId,
 			quantity: request.quantity,
 		});
 
-		// Update request status
 		await RequestsRepository.updateStatus({
 			id: parsedInput.id,
 			status: "CANCELLED",

@@ -107,7 +107,6 @@ export const RequestsRepository = {
 	},
 
 	getBuyerStats: async (buyerId: string) => {
-		// Count by status
 		const statusCounts = await db
 			.select({
 				status: requests.status,
@@ -142,7 +141,6 @@ export const RequestsRepository = {
 	},
 
 	getSellerRequestStats: async (sellerId: string) => {
-		// Count by status for requests on seller's listings
 		const statusCounts = await db
 			.select({
 				status: requests.status,

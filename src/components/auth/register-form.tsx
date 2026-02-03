@@ -60,10 +60,8 @@ export function RegisterForm() {
 				return;
 			}
 
-			// Set role after successful signup
 			const roleResult = await setInitialRole({ email: data.email, role: data.role });
 			if (roleResult?.serverError) {
-				// User created but role not set - show warning but continue
 				toast.warning("Konto erstellt, aber Rolle konnte nicht gesetzt werden. Bitte in den Einstellungen ändern.");
 			} else {
 				toast.success("Konto erstellt");

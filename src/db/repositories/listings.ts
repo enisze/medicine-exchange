@@ -148,7 +148,6 @@ export const ListingsRepository = {
 	getSellerStats: async (userId: string) => {
 		const now = new Date();
 
-		// Count by status
 		const statusCounts = await db
 			.select({
 				status: listings.status,
@@ -158,7 +157,6 @@ export const ListingsRepository = {
 			.where(eq(listings.userId, userId))
 			.groupBy(listings.status);
 
-		// Inventory stats for active listings (not expired)
 		const [inventoryStats] = await db
 			.select({
 				totalQuantity: sum(listings.quantity),
