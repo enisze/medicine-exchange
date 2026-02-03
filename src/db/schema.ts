@@ -21,6 +21,7 @@ export const requestStatusEnum = pgEnum("request_status", [
 	"PENDING",
 	"APPROVED",
 	"REJECTED",
+	"CANCELLED",
 ]);
 
 export const users = pgTable("user", {

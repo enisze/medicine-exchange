@@ -15,6 +15,7 @@ import { ShoppingCart, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { RequestActions } from "@/components/requests/request-actions";
+import { BuyerRequestActions } from "@/components/requests/buyer-request-actions";
 
 export default async function RequestsPage() {
 	const session = await auth.api.getSession({
@@ -58,9 +59,7 @@ export default async function RequestsPage() {
 								<TableHead>{isSeller ? "Anfragender" : "Anbieter"}</TableHead>
 								<TableHead>Datum</TableHead>
 								<TableHead>Status</TableHead>
-								{isSeller && (
-									<TableHead className="text-right">Aktionen</TableHead>
-								)}
+								<TableHead className="text-right">Aktionen</TableHead>
 							</TableRow>
 						</TableHeader>
 						<TableBody>
@@ -96,16 +95,18 @@ export default async function RequestsPage() {
 												)}
 											</div>
 										</TableCell>
-										{isSeller && (
-											<TableCell className="text-right">
-												{request.status === "PENDING" && (
+										<TableCell className="text-right">
+											{request.status === "PENDING" && (
+												isSeller ? (
 													<RequestActions
 														requestId={request.id}
 														insufficientStock={insufficientStock}
 													/>
-												)}
-											</TableCell>
-										)}
+												) : (
+													<BuyerRequestActions requestId={request.id} />
+												)
+											)}
+										</TableCell>
 									</TableRow>
 								);
 							})}
@@ -122,12 +123,14 @@ function StatusBadge({ status }: { status: string }) {
 		PENDING: "outline",
 		APPROVED: "default",
 		REJECTED: "destructive",
+		CANCELLED: "secondary",
 	};
 
 	const labels: Record<string, string> = {
 		PENDING: "Ausstehend",
 		APPROVED: "Genehmigt",
 		REJECTED: "Abgelehnt",
+		CANCELLED: "Storniert",
 	};
 
 	return <Badge variant={variants[status] || "secondary"}>{labels[status] || status}</Badge>;

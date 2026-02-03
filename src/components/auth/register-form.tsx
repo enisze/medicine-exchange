@@ -59,8 +59,15 @@ export function RegisterForm() {
 				toast.error(result.error.message || "Registrierung fehlgeschlagen");
 				return;
 			}
-			await setInitialRole({ email: data.email, role: data.role });
-			toast.success("Konto erstellt");
+
+			// Set role after successful signup
+			const roleResult = await setInitialRole({ email: data.email, role: data.role });
+			if (roleResult?.serverError) {
+				// User created but role not set - show warning but continue
+				toast.warning("Konto erstellt, aber Rolle konnte nicht gesetzt werden. Bitte in den Einstellungen ändern.");
+			} else {
+				toast.success("Konto erstellt");
+			}
 			router.push("/dashboard");
 		} catch {
 			toast.error("Ein Fehler ist aufgetreten");

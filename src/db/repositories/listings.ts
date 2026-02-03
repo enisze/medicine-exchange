@@ -230,7 +230,7 @@ export const ListingsRepository = {
 
 	/**
 	 * Fulfill reservation (on approval) - decrements both quantity and reservedQuantity.
-	 * Returns the updated listing. Auto-transitions to SOLD if quantity reaches 0.
+	 * Atomically transitions to SOLD if quantity reaches 0.
 	 */
 	fulfillReservation: async (params: { id: string; quantity: number }) => {
 		const [updated] = await db
@@ -238,6 +238,7 @@ export const ListingsRepository = {
 			.set({
 				quantity: sql`${listings.quantity} - ${params.quantity}`,
 				reservedQuantity: sql`${listings.reservedQuantity} - ${params.quantity}`,
+				status: sql`CASE WHEN ${listings.quantity} - ${params.quantity} <= 0 THEN 'SOLD' ELSE ${listings.status} END`,
 				updatedAt: new Date(),
 			})
 			.where(eq(listings.id, params.id))
@@ -246,13 +247,6 @@ export const ListingsRepository = {
 				quantity: listings.quantity,
 				reservedQuantity: listings.reservedQuantity,
 			});
-
-		if (updated && updated.quantity <= 0) {
-			await db
-				.update(listings)
-				.set({ status: "SOLD", updatedAt: new Date() })
-				.where(eq(listings.id, params.id));
-		}
 
 		return updated;
 	},

@@ -14,6 +14,11 @@ export const createRequest = authActionClient
 			throw new Error("Angebot nicht gefunden");
 		}
 
+		// Prevent users from requesting their own listings
+		if (listing.userId === ctx.user.id) {
+			throw new Error("Sie können keine Anfrage für Ihr eigenes Angebot stellen");
+		}
+
 		if (listing.status !== "ACTIVE") {
 			throw new Error("Angebot ist nicht verfügbar");
 		}
@@ -150,3 +155,38 @@ export const rejectRequest = authActionClient
 		return { success: true };
 	});
 
+export const cancelRequest = authActionClient
+	.schema(idSchema)
+	.action(async ({ parsedInput, ctx }) => {
+		const request = await RequestsRepository.getById(parsedInput.id);
+
+		if (!request) {
+			throw new Error("Anfrage nicht gefunden");
+		}
+
+		// Only the buyer who created the request can cancel it
+		if (request.buyerId !== ctx.user.id) {
+			throw new Error("Keine Berechtigung");
+		}
+
+		if (request.status !== "PENDING") {
+			throw new Error("Nur ausstehende Anfragen können storniert werden");
+		}
+
+		// Release the reservation
+		await ListingsRepository.releaseReservation({
+			id: request.listingId,
+			quantity: request.quantity,
+		});
+
+		// Update request status
+		await RequestsRepository.updateStatus({
+			id: parsedInput.id,
+			status: "CANCELLED",
+		});
+
+		revalidatePath("/listings");
+		revalidatePath(`/listings/${request.listingId}`);
+		revalidatePath("/dashboard/requests");
+		return { success: true };
+	});

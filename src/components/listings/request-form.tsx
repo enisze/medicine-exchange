@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
@@ -25,13 +26,17 @@ interface RequestFormProps {
 }
 
 export function RequestForm({ listingId, maxQuantity, unit }: RequestFormProps) {
-	const formSchema = createRequestSchema.extend({
-		quantity: z
-			.number()
-			.int()
-			.positive("Menge muss positiv sein")
-			.max(maxQuantity, `Maximal ${maxQuantity} ${unit} verfügbar`),
-	});
+	const formSchema = useMemo(
+		() =>
+			createRequestSchema.extend({
+				quantity: z
+					.number()
+					.int()
+					.positive("Menge muss positiv sein")
+					.max(maxQuantity, `Maximal ${maxQuantity} ${unit} verfügbar`),
+			}),
+		[maxQuantity, unit]
+	);
 
 	const { form, handleSubmitWithAction, resetFormAndAction, action } = useHookFormAction(
 		createRequest,

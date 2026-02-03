@@ -4,21 +4,21 @@ import { UsersRepository } from "@/db/repositories";
 import { setInitialRoleSchema, updateRoleSchema } from "@/lib/validations";
 import { actionClient, authActionClient } from "@/lib/safe-action";
 
-export const setInitialRole = actionClient
+export const setInitialRole = authActionClient
 	.schema(setInitialRoleSchema)
-	.action(async ({ parsedInput }) => {
-		const user = await UsersRepository.getByEmail(parsedInput.email);
-
-		if (!user) {
-			throw new Error("User not found");
+	.action(async ({ parsedInput, ctx }) => {
+		// Security: Only allow users to set their own role
+		if (ctx.user.email !== parsedInput.email) {
+			throw new Error("Cannot set role for another user");
 		}
 
-		if (user.role !== "BUYER") {
+		// Only update if still on default BUYER role
+		if (ctx.user.role !== "BUYER") {
 			return { success: true };
 		}
 
-		await UsersRepository.updateRoleByEmail({
-			email: parsedInput.email,
+		await UsersRepository.updateRole({
+			id: ctx.user.id,
 			role: parsedInput.role,
 		});
 
