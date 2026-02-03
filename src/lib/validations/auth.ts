@@ -11,16 +11,10 @@ export const registerSchema = loginSchema.extend({
 	role: userRoleSchema,
 });
 
-export const setInitialRoleSchema = z.object({
-	email: z.string().email(),
-	role: userRoleSchema,
-});
-
 export const updateRoleSchema = userInsertSchema
 	.pick({ role: true })
 	.required();
 
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
-export type SetInitialRoleInput = z.infer<typeof setInitialRoleSchema>;
 export type UpdateRoleInput = z.infer<typeof updateRoleSchema>;

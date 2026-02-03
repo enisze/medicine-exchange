@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp } from "@/lib/auth-client";
-import { setInitialRole } from "@/actions/auth";
 import { registerSchema, type RegisterInput } from "@/lib/validations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,18 +53,14 @@ export function RegisterForm() {
 				email: data.email,
 				password: data.password,
 				name: data.name,
+				role: data.role,
 			});
 			if (result.error) {
 				toast.error(result.error.message || "Registrierung fehlgeschlagen");
 				return;
 			}
 
-			const roleResult = await setInitialRole({ email: data.email, role: data.role });
-			if (roleResult?.serverError) {
-				toast.warning("Konto erstellt, aber Rolle konnte nicht gesetzt werden. Bitte in den Einstellungen ändern.");
-			} else {
-				toast.success("Konto erstellt");
-			}
+			toast.success("Konto erstellt");
 			router.push("/dashboard");
 		} catch {
 			toast.error("Ein Fehler ist aufgetreten");
