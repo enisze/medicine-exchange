@@ -1,10 +1,10 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { LoginForm } from "@/components/auth/login-form";
+import { RegisterForm } from "@/components/auth/register-form";
 import { Package2 } from "lucide-react";
 
-export default async function HomePage() {
+export default async function RegisterPage() {
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
@@ -25,7 +25,7 @@ export default async function HomePage() {
 					Krankenhäusern
 				</p>
 			</div>
-			<LoginForm />
+			<RegisterForm />
 		</main>
 	);
 }

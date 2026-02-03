@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import { LoginForm } from "@/components/auth/login-form";
 import { Package2 } from "lucide-react";
 
-export default async function HomePage() {
+export default async function LoginPage() {
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
