@@ -4,8 +4,20 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
 import { users, listings, requests, accounts, sessions } from "./schema";
-// @ts-expect-error - internal better-auth module
-import { hashPassword } from "better-auth/dist/crypto/password.mjs";
+import { scryptAsync } from "@noble/hashes/scrypt.js";
+import { bytesToHex } from "@noble/hashes/utils.js";
+
+// Hash password using same format as better-auth (scrypt)
+async function hashPassword(password: string): Promise<string> {
+	const salt = bytesToHex(crypto.getRandomValues(new Uint8Array(16)));
+	const key = await scryptAsync(password.normalize("NFKC"), salt, {
+		N: 16384,
+		r: 16,
+		p: 1,
+		dkLen: 64,
+	});
+	return `${salt}:${bytesToHex(key)}`;
+}
 
 // Test password for all seeded accounts
 const TEST_PASSWORD = "password123";
