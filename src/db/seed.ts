@@ -3,7 +3,12 @@ import { faker } from "@faker-js/faker";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
-import { users, listings, requests } from "./schema";
+import { users, listings, requests, accounts, sessions } from "./schema";
+// @ts-expect-error - internal better-auth module
+import { hashPassword } from "better-auth/dist/crypto/password.mjs";
+
+// Test password for all seeded accounts
+const TEST_PASSWORD = "password123";
 
 // Seed configuration
 const CONFIG = {
@@ -271,6 +276,14 @@ async function seed() {
 	faker.seed(42);
 
 	try {
+		// Clear existing data (order matters due to foreign keys)
+		console.log("Clearing existing data...");
+		await db.delete(requests);
+		await db.delete(listings);
+		await db.delete(sessions);
+		await db.delete(accounts);
+		await db.delete(users);
+
 		const now = new Date();
 
 		// Create sellers
@@ -291,6 +304,17 @@ async function seed() {
 		}
 		await db.insert(users).values(sellerData).onConflictDoNothing();
 
+		// Create accounts for sellers (for login)
+		const hashedPassword = await hashPassword(TEST_PASSWORD);
+		const sellerAccountData = sellerData.map((seller) => ({
+			id: createId(),
+			accountId: seller.id,
+			providerId: "credential",
+			userId: seller.id,
+			password: hashedPassword,
+		}));
+		await db.insert(accounts).values(sellerAccountData).onConflictDoNothing();
+
 		// Create buyers
 		console.log(`Creating ${CONFIG.buyers} buyers...`);
 		const buyerIds: string[] = [];
@@ -308,6 +332,16 @@ async function seed() {
 			});
 		}
 		await db.insert(users).values(buyerData).onConflictDoNothing();
+
+		// Create accounts for buyers (for login)
+		const buyerAccountData = buyerData.map((buyer) => ({
+			id: createId(),
+			accountId: buyer.id,
+			providerId: "credential",
+			userId: buyer.id,
+			password: hashedPassword,
+		}));
+		await db.insert(accounts).values(buyerAccountData).onConflictDoNothing();
 
 		// Create listings
 		console.log("Creating listings...");
@@ -456,6 +490,7 @@ async function seed() {
 		console.log("═══════════════════════════════════════════════════════");
 		console.log("                    TEST ACCOUNTS                       ");
 		console.log("═══════════════════════════════════════════════════════\n");
+		console.log(`Password for all accounts: ${TEST_PASSWORD}\n`);
 		console.log("Sellers:");
 		console.log("   seller1@medsupply.test ... seller15@medsupply.test\n");
 		console.log("Buyers:");
