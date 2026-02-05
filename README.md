@@ -80,84 +80,6 @@ Open [http://localhost:3000](http://localhost:3000)
 4. Enter quantity and submit request
 5. Track request status in your dashboard
 
-## Project Structure
-
-```
-src/
-├── app/
-│   ├── (dashboard)/          # Protected pages
-│   │   ├── dashboard/        # Dashboard overview
-│   │   │   ├── listings/     # My listings
-│   │   │   └── requests/     # Requests
-│   │   └── layout.tsx        # Dashboard layout
-│   ├── api/auth/[...all]/    # better-auth API
-│   ├── listings/             # Public listings
-│   └── page.tsx              # Landing + Auth
-├── actions/                  # Server Actions
-│   ├── auth.ts
-│   ├── listings.ts
-│   └── requests.ts
-├── components/
-│   ├── ui/                   # shadcn components
-│   ├── auth/
-│   ├── layout/
-│   ├── listings/
-│   └── requests/
-├── db/
-│   ├── schema.ts             # Drizzle schema
-│   └── index.ts              # DB client
-└── lib/
-    ├── auth.ts               # better-auth server
-    ├── auth-client.ts        # better-auth client
-    ├── safe-action.ts        # next-safe-action
-    └── utils.ts
-```
-
-## Data Model
-
-### User
-
-| Field   | Type               |
-| ------- | ------------------ |
-| id      | string             |
-| email   | string             |
-| name    | string             |
-| role    | SELLER \| BUYER    |
-
-### Listing
-
-| Field            | Type                               |
-| ---------------- | ---------------------------------- |
-| id               | string                             |
-| userId           | string                             |
-| title            | string                             |
-| description      | string?                            |
-| quantity         | number                             |
-| reservedQuantity | number                             |
-| unit             | string                             |
-| expiryDate       | Date                               |
-| status           | DRAFT \| ACTIVE \| SOLD \| EXPIRED |
-
-### Request
-
-| Field     | Type                             |
-| --------- | -------------------------------- |
-| id        | string                           |
-| listingId | string                           |
-| buyerId   | string                           |
-| quantity  | number                           |
-| status    | PENDING \| APPROVED \| REJECTED  |
-
-## Inventory Logic
-
-```
-Create request   → reservedQuantity += requestedQuantity
-Approve request  → quantity -= requestedQuantity
-                   reservedQuantity -= requestedQuantity
-Reject request   → reservedQuantity -= requestedQuantity
-Listing → SOLD   → when quantity = 0
-```
-
 ## Scripts
 
 | Command          | Description           |
@@ -166,15 +88,15 @@ Listing → SOLD   → when quantity = 0
 | `bun run build`  | Production build      |
 | `bun run start`  | Production server     |
 | `bun run lint`   | Linting               |
-| `bun run format` | Formatting            |
 
-## Drizzle Commands
+## Database Commands
 
-```bash
-bunx drizzle-kit generate   # Generate migration
-bunx drizzle-kit migrate    # Run migrations
-bunx drizzle-kit studio     # Open Drizzle Studio
-```
+| Command              | Description           |
+| -------------------- | --------------------- |
+| `bun run db:generate`| Generate migration    |
+| `bun run db:migrate` | Run migrations        |
+| `bun run db:studio`  | Open Drizzle Studio   |
+| `bun run db:seed`    | Seed database         |
 
 ## License
 
