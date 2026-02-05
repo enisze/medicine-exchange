@@ -16,6 +16,7 @@
   "dependencies": {
     "@faker-js/faker": "^10.2.0",
     "@hookform/resolvers": "^3.10.0",
+    "@next-safe-action/adapter-react-hook-form": "^2.0.0",
     "@noble/hashes": "^2.0.1",
     "@paralleldrive/cuid2": "^3.3.0",
     "@radix-ui/react-accordion": "1.2.2",
@@ -53,7 +54,7 @@
     "cmdk": "1.0.4",
     "date-fns": "4.1.0",
     "drizzle-orm": "^0.45.1",
-    "drizzle-zod": "^0.8.3",
+    "drizzle-zod": "0.7.0",
     "embla-carousel-react": "8.5.1",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
